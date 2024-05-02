@@ -1,0 +1,23 @@
+{
+  "name": "material-ui-vite",
+  "version": "5.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.15.16",
+    "@mui/material": "^5.15.16",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router-dom": "^6.23.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest"
+  }
+}

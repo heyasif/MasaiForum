@@ -12,11 +12,13 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
   const apiBaseUrl = import.meta.env.VITE_BASE_URL;
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -42,6 +44,7 @@ export default function SignUp() {
 
       // Redirect or show success message upon successful registration
       console.log("User registered successfully");
+      navigate("/login");
     } catch (error) {
       console.error("Error registering user:", error.message);
       // Handle error (e.g., show error message to user)

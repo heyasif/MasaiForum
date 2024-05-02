@@ -1,26 +1,23 @@
-import * as React from 'react';
-import { createRoot } from 'react-dom/client';
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
-import App from './App';
-import theme from './theme';
-import NavBar from './NavBar';
-import SignInSide from './components/SignIn';
-import SignUp from './components/SingUp';
-import { BrowserRouter } from 'react-router-dom';
-const rootElement = document.getElementById('root');
+import * as React from "react";
+import { createRoot } from "react-dom/client";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import App from "./App";
+import theme from "./theme";
+import NavBar from "./NavBar";
+import SignInSide from "./components/SignIn";
+import SignUp from "./components/SingUp";
+import { BrowserRouter } from "react-router-dom";
+const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-      <CssBaseline />
+        <CssBaseline />
         <App />
       </BrowserRouter>
-     
-     
     </ThemeProvider>
-    ,
-  </React.StrictMode>,
+  </React.StrictMode>
 );

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,58 +13,36 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate, Link } from "react-router-dom";
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import { loginUser } from "../features/authSlice";
 
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
   const navigate = useNavigate();
-  const apiBaseUrl = import.meta.env.VITE_BASE_URL;
+  const dispatch = useDispatch();
+  const authStatus = useSelector((state) => state.auth.status);
+  const authError = useSelector((state) => state.auth.error);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
+    // Extracting data from FormData and constructing a JSON object
     const userData = {
       email: data.get("email"),
       password: data.get("password"),
     };
     console.log(userData);
-    try {
-      const response = await fetch(`${apiBaseUrl}api/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
 
-      if (!response.ok) {
-        throw new Error("Failed to login");
+    // Dispatch the loginUser action with userData as JSON
+    dispatch(loginUser(userData)).then(({ payload }) => {
+      console.log(payload);
+      if (payload) {
+        navigate("/");
+      } else if (authError) {
+        console.error("Error logging in:", authError);
       }
-      const responseData = await response.json();
-      console.log(responseData);
-      navigate("/");
-    } catch (error) {
-      console.error("Error logging in:", error.message);
-    }
+    });
   };
 
   return (
@@ -145,7 +124,8 @@ export default function SignInSide() {
                 <Grid item xs>
                   <Link href="#" variant="body2">
                     Forgot password?
-                  </Link>
+                  </Link>{" "}
+                  {/* Make sure this closing tag is present */}
                 </Grid>
                 <Grid item>
                   <Link to="/signup" variant="body2">
@@ -153,7 +133,8 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
               </Grid>
-              <Copyright sx={{ mt: 5 }} />
+
+              {/* <Copyright sx={{ mt: 5 }} /> */}
             </Box>
           </Box>
         </Grid>

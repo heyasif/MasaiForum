@@ -16,7 +16,7 @@ app.use('/api',postRoute)
 
 //home
 app.use('/',(req,res)=>{
-    res.send("server is working")
+    res.send("Server is Running")
 })
 
 

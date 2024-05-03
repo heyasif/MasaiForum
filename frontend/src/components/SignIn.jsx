@@ -14,6 +14,8 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../features/authSlice";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const defaultTheme = createTheme();
 
@@ -23,26 +25,41 @@ export default function SignInSide() {
   const authStatus = useSelector((state) => state.auth.status);
   const authError = useSelector((state) => state.auth.error);
 
+  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
+  const [successMessage, setSuccessMessage] = React.useState("");
+  const [openErrorSnackbar, setOpenErrorSnackbar] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    // Extracting data from FormData and constructing a JSON object
     const userData = {
       email: data.get("email"),
       password: data.get("password"),
     };
-    console.log(userData);
 
-    // Dispatch the loginUser action with userData as JSON
-    dispatch(loginUser(userData)).then(({ payload }) => {
-      console.log(payload);
-      if (payload) {
-        navigate("/");
-      } else if (authError) {
-        console.error("Error logging in:", authError);
-      }
-    });
+    dispatch(loginUser(userData))
+      .unwrap()
+      .then((userData) => {
+        setSuccessMessage("Login successful!");
+        setOpenSuccessSnackbar(true);
+        setTimeout(() => {
+          navigate("/");
+        }, 2000); // Delay navigation to ensure the Snackbar is visible
+      })
+      .catch((error) => {
+        setErrorMessage(error || "Error logging in");
+        setOpenErrorSnackbar(true);
+      });
+  };
+
+  const handleCloseSnackbar = (type) => {
+    if (type === "success") {
+      setOpenSuccessSnackbar(false);
+    } else {
+      setOpenErrorSnackbar(false);
+    }
   };
 
   return (
@@ -56,7 +73,7 @@ export default function SignInSide() {
           md={7}
           sx={{
             backgroundImage:
-              "url(https://source.unsplash.com/random?wallpapers)",
+              "url(https://plus.unsplash.com/premium_photo-1681487814165-018814e29155?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -122,10 +139,9 @@ export default function SignInSide() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  {/* <Link href="#" variant="body2">
                     Forgot password?
-                  </Link>{" "}
-                  {/* Make sure this closing tag is present */}
+                  </Link> */}
                 </Grid>
                 <Grid item>
                   <Link to="/signup" variant="body2">
@@ -133,12 +149,40 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
               </Grid>
-
-              {/* <Copyright sx={{ mt: 5 }} /> */}
             </Box>
           </Box>
         </Grid>
       </Grid>
+      <Snackbar
+        open={openSuccessSnackbar}
+        autoHideDuration={6000}
+        onClose={() => handleCloseSnackbar("success")}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={() => handleCloseSnackbar("success")}
+          severity="success"
+        >
+          {successMessage}
+        </MuiAlert>
+      </Snackbar>
+      <Snackbar
+        open={openErrorSnackbar}
+        autoHideDuration={6000}
+        onClose={() => handleCloseSnackbar("error")}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={() => handleCloseSnackbar("error")}
+          severity="error"
+        >
+          {errorMessage}
+        </MuiAlert>
+      </Snackbar>
     </ThemeProvider>
   );
 }

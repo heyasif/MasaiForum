@@ -7,15 +7,25 @@ const express = require('express')
 const postRoute=express.Router();
 
 
-//Get all post
-postRoute.get('/posts',async(req,res)=>{
+// Get all posts with pagination and sorted by latest
+postRoute.get('/posts', async (req, res) => {
+    const { page = 1, limit = 8 } = req.query; // Defaults to first page and 8 posts per page
     try {
-        const posts = await PostModel.find().populate('user_id', 'username avatar');
-        res.status(200).json(posts);
+        const posts = await PostModel.find()
+                            .sort({ created_at: -1 }) // Sort by date descending
+                            .populate('user_id', 'username avatar')
+                            .limit(limit * 1)
+                            .skip((page - 1) * limit);
+        const count = await PostModel.countDocuments();
+        res.status(200).json({
+            posts,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-})
+});
 
 //Create a new post
 postRoute.post("/posts",auth,async(req,res)=>{

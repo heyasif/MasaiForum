@@ -15,6 +15,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import { logoutUser } from "./features/authSlice";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 const pages = [{ label: "Home", path: "/" }];
 
@@ -58,7 +59,7 @@ function ResponsiveAppBar() {
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <IconButton
+            {/* <IconButton
               size="large"
               aria-label="menu"
               aria-controls="menu-appbar"
@@ -67,7 +68,7 @@ function ResponsiveAppBar() {
               color="inherit"
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
             <Typography
               variant="h6"
               noWrap
@@ -90,7 +91,7 @@ function ResponsiveAppBar() {
                   onClick={handleOpenUserMenu}
                   sx={{ mx: 1, color: "white" }}
                 >
-                  Welcome {user.username}
+                  Welcome {user.username} <AccountCircleIcon />
                 </Button>
                 <Menu
                   id="menu-appbar"

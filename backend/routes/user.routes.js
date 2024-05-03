@@ -30,16 +30,17 @@ userRoute.post('/register', async (req, res) => {
 })
 
 userRoute.post('/login', async (req, res) => {
+    console.log(req.body);  // Consider removing or modifying this line in production for security reasons
     try {
         const { email, password } = req.body;
         const user = await UserModel.findOne({ email });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(401).json({ message: 'Invalid credentials' });  // Generic message
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Invalid credentials' });  // Generic message
         }
 
         const token = jwt.sign(
@@ -48,11 +49,13 @@ userRoute.post('/login', async (req, res) => {
             { expiresIn: '1d' }
         );
 
-        res.status(200).json({ message: 'User logged in successfully', token, username: user });
+        // Correct the way username is returned
+        res.status(200).json({ message: 'User logged in successfully', token,user });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
 
 module.exports = {
     userRoute

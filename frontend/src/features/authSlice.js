@@ -7,6 +7,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;  // Using environment variable
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (loginData, { rejectWithValue }) => {
+
     try {
       const response = await fetch(`${BASE_URL}/api/login`, {
         method: 'POST',
@@ -16,14 +17,15 @@ export const loginUser = createAsyncThunk(
         body: JSON.stringify(loginData),
       });
       const data = await response.json();
+      console.log(data)
       if (!response.ok) throw new Error(data.message || 'Unable to login');
 
       // Extract user details and store them in local storage
       const userData = {
         token: data.token,
-        username: data.username.username,
-        email: data.username.email,
-        id: data.username._id
+        username: data.user.username,
+        email: data.user.email,
+        id: data.user._id
       };
 
       localStorage.setItem('user', JSON.stringify(userData));

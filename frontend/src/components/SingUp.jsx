@@ -1,4 +1,6 @@
 import * as React from "react";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -19,6 +21,7 @@ const defaultTheme = createTheme();
 export default function SignUp() {
   const apiBaseUrl = import.meta.env.VITE_BASE_URL;
   const navigate = useNavigate();
+  const [openSuccessSnackbar, setOpenSuccessSnackbar] = React.useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -42,13 +45,21 @@ export default function SignUp() {
         throw new Error("Failed to register user");
       }
 
-      // Redirect or show success message upon successful registration
-      console.log("User registered successfully");
-      navigate("/login");
+      setOpenSuccessSnackbar(true);
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (error) {
       console.error("Error registering user:", error.message);
       // Handle error (e.g., show error message to user)
     }
+  };
+
+  const handleSuccessSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSuccessSnackbar(false);
   };
 
   return (
@@ -128,6 +139,20 @@ export default function SignUp() {
           </Box>
         </Box>
       </Container>
+      <Snackbar
+        open={openSuccessSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSuccessSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MuiAlert
+          onClose={handleSuccessSnackbarClose}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          User registered successfully!
+        </MuiAlert>
+      </Snackbar>
     </ThemeProvider>
   );
 }

@@ -84,7 +84,7 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/posts?page=${page}&limit=8`
+          `https://api.kylejimenezart.com/api/posts?page=${page}&limit=8`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -125,7 +125,7 @@ const Home = () => {
       const userData = JSON.parse(localStorage.getItem("user"));
       const token = userData.token;
 
-      const response = await fetch("http://localhost:3000/api/posts", {
+      const response = await fetch("https://api.kylejimenezart.com/api/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
